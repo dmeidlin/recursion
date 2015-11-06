@@ -149,9 +149,9 @@ var parseJSON = function (inString) {
       if (cleanUnparsedElements.charAt(i) === ',' && (cursor.isOutsideNest() && cursor.isOutsideDoubleQuote())) {
         cursor.commaIndexes.push(i);
       }
-      if (cleanUnparsedElements.charAt(i) === '"' && cursor.isOutsideDoubleQuote() && !(cleanUnparsedElements.charAt(i) === '\\')) {
+      if (cleanUnparsedElements.charAt(i) === '"' && cursor.isOutsideDoubleQuote() && !(cleanUnparsedElements.charAt(i-1) === '\\')) {
         cursor.doubleQuoteBalance = 1;
-      } else if (cleanUnparsedElements.charAt(i) === '"' && !cursor.isOutsideDoubleQuote() && !(cleanUnparsedElements.charAt(i) === '\\')) {
+      } else if (cleanUnparsedElements.charAt(i) === '"' && !cursor.isOutsideDoubleQuote() && !(cleanUnparsedElements.charAt(i-1) === '\\')) {
         cursor.doubleQuoteBalance = 0;
       }
       if (cleanUnparsedElements.charAt(i) === '{') {
@@ -261,6 +261,6 @@ var result = [];
 //}
 var i;
 for (i=0; i < parseableStrings.length; i++) {
-  result[i] = parseJSON(unparseableStrings[i]);
+  result[i] = parseJSON('"b\\"');
 }
     document.getElementById('result').innerHTML = result;
