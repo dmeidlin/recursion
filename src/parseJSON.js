@@ -109,6 +109,8 @@ var parseJSON = function (inString) {
   var key;
   var keyValue;
   var parsedCollection;
+  var colonIndex;
+  var spaceColonIndex;
   var stringArraySansBrackets = "";
   var unparsedArrayElements = [];
   var unparsedObjKeyValuePairs;
@@ -198,10 +200,12 @@ var parseJSON = function (inString) {
     //all key names are surrounded by double quotes.
     parsedCollection = {};
     for (i=0; i < unparsedArrayElements.length; i++) {
-      if (unparsedArrayElements[i].indexOf('":') === -1) {
+      colonIndex = unparsedArrayElements[i].indexOf('":');
+      spaceColonIndex = unparsedArrayElements[i].indexOf('" :');
+      if (spaceColonIndex < colonIndex) {
         key = unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('"') + 1,unparsedArrayElements[i].indexOf('" :'));
         //parseJSON is called recursively here to parse the value string.
-        keyValue = parseJSON(unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('" :') + 2));
+        keyValue = parseJSON(unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('" :') + 3));
       } else {
         key = unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('"') + 1,unparsedArrayElements[i].indexOf('":'));
         //parseJSON is called recursively here to parse the value string.
