@@ -95,8 +95,8 @@ var parseJSON = function (inString) {
     //slice off each string between the commas and copy into an array.
     unparsedArrayElements[0] = cleanUnparsedElements.slice(0, cursor.commaIndexes[0]);
     if (cursor.commaIndexes.length > 1) {
-      for (i=0; i < cursor.commaIndexes.length - 2; i++) {
-        unparsedArrayElements[i] = cleanUnparsedElements.slice(cursor.commaIndexes[i]+1, cursor.commaIndexes[i+1]);
+      for (i=1; i < cursor.commaIndexes.length; i++) {
+        unparsedArrayElements[i] = cleanUnparsedElements.slice(cursor.commaIndexes[i - 1] + 1, cursor.commaIndexes[i]);
       }
     }
     unparsedArrayElements[cursor.commaIndexes.length] = cleanUnparsedElements.slice(cursor.commaIndexes[cursor.commaIndexes.length -1] + 1);
@@ -169,5 +169,5 @@ var result;
 //for (i=0; i > parseableStrings.length; i++) {
 //  result[i] = parseJSON(parseableStrings[i]);
 //}
-result = parseJSON('9');
+result = parseJSON('  [23, 67, 66]   ');
     document.getElementById('result').innerHTML = result;
