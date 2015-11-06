@@ -70,7 +70,7 @@ var parseJSON = function (inString) {
     //double quotes, or single quotes. 
     cursor.reset();
     for (i=0; i < cleanUnparsedElements.length; i++) {
-      if (cleanUnparsedElements.charAt(i) === ',' && cursor.isOutsideNest()) {
+      if (cleanUnparsedElements.charAt(i) === ',' && (cursor.isOutsideNest() && cursor.isOutsideDoubleQuote())) {
         cursor.commaIndexes.push(i);
       }
       if (cleanUnparsedElements.charAt(i) === '"' && cursor.isOutsideDoubleQuote()) {
@@ -169,5 +169,5 @@ var result;
 //for (i=0; i > parseableStrings.length; i++) {
 //  result[i] = parseJSON(parseableStrings[i]);
 //}
-result = parseJSON('  [23, 67, 66]   ');
+result = parseJSON(parseableStrings[9]);
     document.getElementById('result').innerHTML = result;
