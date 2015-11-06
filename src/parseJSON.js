@@ -200,11 +200,13 @@ var parseJSON = function (inString) {
     for (i=0; i < unparsedArrayElements.length; i++) {
       if (unparsedArrayElements[i].indexOf('":') === -1) {
         key = unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('"') + 1,unparsedArrayElements[i].indexOf('" :'));
+        //parseJSON is called recursively here to parse the value string.
+        keyValue = parseJSON(unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('" :') + 2));
       } else {
         key = unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('"') + 1,unparsedArrayElements[i].indexOf('":'));
+        //parseJSON is called recursively here to parse the value string.
+        keyValue = parseJSON(unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('":') + 2));
       }
-      //parseJSON is called recursively here to parse the value string.
-      keyValue = parseJSON(unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('":') + 2));
       parsedCollection[key] = keyValue;
     }
   } else if (cleanUnparsedElements.charAt(0) === '[' && cleanUnparsedElements.charAt(cleanUnparsedElements.length - 1) === ']') {
