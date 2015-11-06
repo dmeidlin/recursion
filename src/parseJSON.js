@@ -64,36 +64,36 @@ var parseableStrings = [
   //   '"callback","required":true,"type":"callback"}]}],' +
   //   '"name":"LockerUploader","version":{"major":0,' +
   //   '"micro":1,"minor":0},"versionString":"0.0.1"}',
-  '{ "firstName": "John", "lastName" : "Smith", "age" : ' +
-    '25, "address" : { "streetAddress": "21 2nd Street", ' +
-    '"city" : "New York", "state" : "NY", "postalCode" : ' +
-    ' "10021" }, "phoneNumber": [ { "type" : "home", ' +
-    '"number": "212 555-1234" }, { "type" : "fax", ' +
-    '"number": "646 555-4567" } ] }',
-  // '{\r\n' +
-  //   '          "glossary": {\n' +
-  //   '              "title": "example glossary",\n\r' +
-  //   '      \t\t"GlossDiv": {\r\n' +
-  //   '                  "title": "S",\r\n' +
-  //   '      \t\t\t"GlossList": {\r\n' +
-  //   '                      "GlossEntry": {\r\n' +
-  //   '                          "ID": "SGML",\r\n' +
-  //   '      \t\t\t\t\t"SortAs": "SGML",\r\n' +
-  //   '      \t\t\t\t\t"GlossTerm": "Standard Generalized ' +
-  //   'Markup Language",\r\n' +
-  //   '      \t\t\t\t\t"Acronym": "SGML",\r\n' +
-  //   '      \t\t\t\t\t"Abbrev": "ISO 8879:1986",\r\n' +
-  //   '      \t\t\t\t\t"GlossDef": {\r\n' +
-  //   '                              "para": "A meta-markup language,' +
-  //   ' used to create markup languages such as DocBook.",\r\n' +
-  //   '      \t\t\t\t\t\t"GlossSeeAlso": ["GML", "XML"]\r\n' +
-  //   '                          },\r\n' +
-  //   '      \t\t\t\t\t"GlossSee": "markup"\r\n' +
-  //   '                      }\r\n' +
-  //   '                  }\r\n' +
-  //   '              }\r\n' +
-  //   '          }\r\n' +
-  //   '      }\r\n'
+  // '{ "firstName": "John", "lastName" : "Smith", "age" : ' +
+  //   '25, "address" : { "streetAddress": "21 2nd Street", ' +
+  //   '"city" : "New York", "state" : "NY", "postalCode" : ' +
+  //   ' "10021" }, "phoneNumber": [ { "type" : "home", ' +
+  //   '"number": "212 555-1234" }, { "type" : "fax", ' +
+  //   '"number": "646 555-4567" } ] }',
+  '{\r\n' +
+    '          "glossary": {\n' +
+    '              "title": "example glossary",\n\r' +
+    '      \t\t"GlossDiv": {\r\n' +
+    '                  "title": "S",\r\n' +
+    '      \t\t\t"GlossList": {\r\n' +
+    '                      "GlossEntry": {\r\n' +
+    '                          "ID": "SGML",\r\n' +
+    '      \t\t\t\t\t"SortAs": "SGML",\r\n' +
+    '      \t\t\t\t\t"GlossTerm": "Standard Generalized ' +
+    'Markup Language",\r\n' +
+    '      \t\t\t\t\t"Acronym": "SGML",\r\n' +
+    '      \t\t\t\t\t"Abbrev": "ISO 8879:1986",\r\n' +
+    '      \t\t\t\t\t"GlossDef": {\r\n' +
+    '                              "para": "A meta-markup language,' +
+    ' used to create markup languages such as DocBook.",\r\n' +
+    '      \t\t\t\t\t\t"GlossSeeAlso": ["GML", "XML"]\r\n' +
+    '                          },\r\n' +
+    '      \t\t\t\t\t"GlossSee": "markup"\r\n' +
+    '                      }\r\n' +
+    '                  }\r\n' +
+    '              }\r\n' +
+    '          }\r\n' +
+    '      }\r\n'
 ];
 
 var unparseableStrings = [
@@ -192,6 +192,8 @@ var parseJSON = function (inString) {
   }
   endUnparsedElements = json.length - 1 - i;
   cleanUnparsedElements  = json.slice(startUnparsedElements,endUnparsedElements + 1);
+  //remove carriage returns, newlines, and tabs
+  cleanUnparsedElements = cleanUnparsedElements.replace(/(\r|\n|\t)/g,'');
   
   //check if an object, array, or single value is to be returned.
    if (cleanUnparsedElements.charAt(0) === '{' && cleanUnparsedElements.charAt(cleanUnparsedElements.length - 1) === '}') {
