@@ -218,6 +218,16 @@ var parseJSON = function (inString) {
     //so that the same function used for arrays and objects may be called to detect 
     //any unpaired brackets or quotes in cleanUnparsedElements.
     cleanUnparsedElements = '[' + cleanUnparsedElements + ']';
+    splitUnparsedElements();
+    //throw a SyntaxError if there are any unpaired brackets or quotes.
+    try {
+      if (cursor.doubleQuoteBalance > 0 || cursor.squareBracketBalance > 0 || cursor.curlyBraceBalance > 0) {
+        throw "SyntaxError";
+      }
+    }
+    catch(err) {
+      return err;
+    }
     //parse the undefined, string, null, or boolean
     if (cleanUnparsedElements === 'true') {
       parsedCollection = true;
