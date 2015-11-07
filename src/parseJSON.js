@@ -201,27 +201,30 @@ var parseJSON = function (inString) {
     //parse the object key/value pairs separated by commas.
     //all key names are surrounded by double quotes.
     parsedCollection = {};
-    for (i=0; i < unparsedArrayElements.length; i++) {
-      colonIndex = unparsedArrayElements[i].indexOf('":');
-      spaceColonIndex = unparsedArrayElements[i].indexOf('" :');
-      if (colonIndex === -1) {
-        key = unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('"') + 1,unparsedArrayElements[i].indexOf('" :'));
-        //parseJSON is called recursively here to parse the value string.
-        keyValue = parseJSON(unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('" :') + 3));
-      } else if (spaceColonIndex === -1) {
-        key = unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('"') + 1,unparsedArrayElements[i].indexOf('":'));
-        //parseJSON is called recursively here to parse the value string.
-        keyValue = parseJSON(unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('":') + 2));
-      } else if (spaceColonIndex < colonIndex && spaceColonIndex !== -1) {
-        key = unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('"') + 1,unparsedArrayElements[i].indexOf('" :'));
-        //parseJSON is called recursively here to parse the value string.
-        keyValue = parseJSON(unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('" :') + 3));
-      } else if (colonIndex < spaceColonIndex && colonIndex !== -1) {
-        key = unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('"') + 1,unparsedArrayElements[i].indexOf('":'));
-        //parseJSON is called recursively here to parse the value string.
-        keyValue = parseJSON(unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('":') + 2));
+    if (unparsedArrayElements.length === 1 && unparsedArrayElements[0] === '') {
+    } else {
+      for (i=0; i < unparsedArrayElements.length; i++) {
+        colonIndex = unparsedArrayElements[i].indexOf('":');
+        spaceColonIndex = unparsedArrayElements[i].indexOf('" :');
+        if (colonIndex === -1) {
+          key = unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('"') + 1,unparsedArrayElements[i].indexOf('" :'));
+          //parseJSON is called recursively here to parse the value string.
+          keyValue = parseJSON(unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('" :') + 3));
+        } else if (spaceColonIndex === -1) {
+          key = unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('"') + 1,unparsedArrayElements[i].indexOf('":'));
+          //parseJSON is called recursively here to parse the value string.
+          keyValue = parseJSON(unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('":') + 2));
+        } else if (spaceColonIndex < colonIndex && spaceColonIndex !== -1) {
+          key = unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('"') + 1,unparsedArrayElements[i].indexOf('" :'));
+          //parseJSON is called recursively here to parse the value string.
+          keyValue = parseJSON(unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('" :') + 3));
+        } else if (colonIndex < spaceColonIndex && colonIndex !== -1) {
+          key = unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('"') + 1,unparsedArrayElements[i].indexOf('":'));
+          //parseJSON is called recursively here to parse the value string.
+          keyValue = parseJSON(unparsedArrayElements[i].slice(unparsedArrayElements[i].indexOf('":') + 2));
+        }
+        parsedCollection[key] = keyValue;
       }
-      parsedCollection[key] = keyValue;
     }
   } else if (cleanUnparsedElements.charAt(0) === '[' && cleanUnparsedElements.charAt(cleanUnparsedElements.length - 1) === ']') {
     splitUnparsedElements();
