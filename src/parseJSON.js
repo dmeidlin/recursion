@@ -227,9 +227,12 @@ var parseJSON = function (inString) {
     splitUnparsedElements();
     //parse the array elements separated by commas.
     parsedCollection = [];
-    for (i=0; i < unparsedArrayElements.length; i++) {
-      //parseJSON is called recursively here to parse the value string.
-      parsedCollection[i] = parseJSON(unparsedArrayElements[i]);
+    if (unparsedArrayElements.length === 1 && unparsedArrayElements[0] === '') {
+    } else {
+      for (i=0; i < unparsedArrayElements.length; i++) {
+        //parseJSON is called recursively here to parse the value string.
+        parsedCollection[i] = parseJSON(unparsedArrayElements[i]);
+      }
     }
   } else {
     //add single dummy characters to the front and back of the cleanUnparsedElements
@@ -275,9 +278,9 @@ var i;
 for (i=0; i < parseableStrings.length; i++) {
   result[i] = parseJSON(parseableStrings[i]);
 }
-for (i=0; i < unparseableStrings.length; i++) {
-  result.push(parseJSON(unparseableStrings[i]));
-}
+// for (i=0; i < unparseableStrings.length; i++) {
+//   result.push(parseJSON(unparseableStrings[i]));
+// }
 for (i=0; i < parseableStrings.length; i++) {
   expected[i] = JSON.parse(parseableStrings[i]);
 }
