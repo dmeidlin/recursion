@@ -36,40 +36,40 @@ var parseableStrings = [
   '["and you can\'t escape thi\s"]',
 
   // everything all at once
-  // '{"CoreletAPIVersion":2,"CoreletType":"standalone",' +
-  //   '"documentation":"A corelet that provides the capability to upload' +
-  //   ' a folderâ€™s contents into a userâ€™s locker.","functions":[' +
-  //   '{"documentation":"Displays a dialog box that allows user to ' +
-  //   'select a folder on the local system.","name":' +
-  //   '"ShowBrowseDialog","parameters":[{"documentation":"The ' +
-  //   'callback function for results.","name":"callback","required":' +
-  //   'true,"type":"callback"}]},{"documentation":"Uploads all mp3 files' +
-  //   ' in the folder provided.","name":"UploadFolder","parameters":' +
-  //   '[{"documentation":"The path to upload mp3 files from."' +
-  //   ',"name":"path","required":true,"type":"string"},{"documentation":' +
-  //   ' "The callback function for progress.","name":"callback",' +
-  //   '"required":true,"type":"callback"}]},{"documentation":"Returns' +
-  //   ' the server name to the current locker service.",' +
-  //   '"name":"GetLockerService","parameters":[]},{"documentation":' +
-  //   '"Changes the name of the locker service.","name":"SetLockerSer' +
-  //   'vice","parameters":[{"documentation":"The value of the locker' +
-  //   ' service to set active.","name":"LockerService","required":true' +
-  //   ',"type":"string"}]},{"documentation":"Downloads locker files to' +
-  //   ' the suggested folder.","name":"DownloadFile","parameters":[{"' +
-  //   'documentation":"The origin path of the locker file.",' +
-  //   '"name":"path","required":true,"type":"string"},{"documentation"' +
-  //   ':"The Window destination path of the locker file.",' +
-  //   '"name":"destination","required":true,"type":"integer"},{"docum' +
-  //   'entation":"The callback function for progress.","name":' +
-  //   '"callback","required":true,"type":"callback"}]}],' +
-  //   '"name":"LockerUploader","version":{"major":0,' +
-  //   '"micro":1,"minor":0},"versionString":"0.0.1"}',
-  // '{ "firstName": "John", "lastName" : "Smith", "age" : ' +
-  //   '25, "address" : { "streetAddress": "21 2nd Street", ' +
-  //   '"city" : "New York", "state" : "NY", "postalCode" : ' +
-  //   ' "10021" }, "phoneNumber": [ { "type" : "home", ' +
-  //   '"number": "212 555-1234" }, { "type" : "fax", ' +
-  //   '"number": "646 555-4567" } ] }',
+  '{"CoreletAPIVersion":2,"CoreletType":"standalone",' +
+    '"documentation":"A corelet that provides the capability to upload' +
+    ' a folderâ€™s contents into a userâ€™s locker.","functions":[' +
+    '{"documentation":"Displays a dialog box that allows user to ' +
+    'select a folder on the local system.","name":' +
+    '"ShowBrowseDialog","parameters":[{"documentation":"The ' +
+    'callback function for results.","name":"callback","required":' +
+    'true,"type":"callback"}]},{"documentation":"Uploads all mp3 files' +
+    ' in the folder provided.","name":"UploadFolder","parameters":' +
+    '[{"documentation":"The path to upload mp3 files from."' +
+    ',"name":"path","required":true,"type":"string"},{"documentation":' +
+    ' "The callback function for progress.","name":"callback",' +
+    '"required":true,"type":"callback"}]},{"documentation":"Returns' +
+    ' the server name to the current locker service.",' +
+    '"name":"GetLockerService","parameters":[]},{"documentation":' +
+    '"Changes the name of the locker service.","name":"SetLockerSer' +
+    'vice","parameters":[{"documentation":"The value of the locker' +
+    ' service to set active.","name":"LockerService","required":true' +
+    ',"type":"string"}]},{"documentation":"Downloads locker files to' +
+    ' the suggested folder.","name":"DownloadFile","parameters":[{"' +
+    'documentation":"The origin path of the locker file.",' +
+    '"name":"path","required":true,"type":"string"},{"documentation"' +
+    ':"The Window destination path of the locker file.",' +
+    '"name":"destination","required":true,"type":"integer"},{"docum' +
+    'entation":"The callback function for progress.","name":' +
+    '"callback","required":true,"type":"callback"}]}],' +
+    '"name":"LockerUploader","version":{"major":0,' +
+    '"micro":1,"minor":0},"versionString":"0.0.1"}',
+  '{ "firstName": "John", "lastName" : "Smith", "age" : ' +
+    '25, "address" : { "streetAddress": "21 2nd Street", ' +
+    '"city" : "New York", "state" : "NY", "postalCode" : ' +
+    ' "10021" }, "phoneNumber": [ { "type" : "home", ' +
+    '"number": "212 555-1234" }, { "type" : "fax", ' +
+    '"number": "646 555-4567" } ] }',
   '{\r\n' +
     '          "glossary": {\n' +
     '              "title": "example glossary",\n\r' +
@@ -99,7 +99,7 @@ var parseableStrings = [
 var unparseableStrings = [
     '["foo", "bar"',
     '["foo", "bar\\"]'
-];
+  ];
 
 
 var parseJSON = function (inString) {
@@ -238,14 +238,9 @@ var parseJSON = function (inString) {
     cleanUnparsedElements = '[' + cleanUnparsedElements + ']';
     splitUnparsedElements();
     //throw a SyntaxError if there are any unpaired brackets or quotes.
-    try {
       if (cursor.doubleQuoteBalance > 0 || cursor.squareBracketBalance > 0 || cursor.curlyBraceBalance > 0) {
-        throw "SyntaxError";
+        throw new SyntaxError("Unexpected end of input");
       }
-    }
-    catch(err) {
-      return err;
-    }
     //parse the undefined, string, null, or boolean
     if (cleanUnparsedElements === 'true') {
       parsedCollection = true;
@@ -272,19 +267,21 @@ var parseJSON = function (inString) {
   return parsedCollection;
 };
 
-var expected = eval("(" + parseableStrings + ")");
-    document.getElementById('expected').innerHTML = expected;
+// var expected = eval("(" + parseableStrings + ")");
+//     document.getElementById('expected').innerHTML = expected;
 var result = []; 
-//var i;
-//for (i=0; i > parseableStrings.length; i++) {
-//  result[i] = parseJSON(parseableStrings[i]);
-//}
+var expected = [];
 var i;
-result = parseJSON(parseableStrings[17]);
-// for (i=0; i < parseableStrings.length; i++) {
-//   result[i] = parseJSON(parseableStrings[i]);
-// }
+for (i=0; i < parseableStrings.length; i++) {
+  result[i] = parseJSON(parseableStrings[i]);
+}
+for (i=0; i < unparseableStrings.length; i++) {
+  result.push(parseJSON(unparseableStrings[i]));
+}
+for (i=0; i < parseableStrings.length; i++) {
+  expected[i] = JSON.parse(parseableStrings[i]);
+}
 // for (i=0; i < unparseableStrings.length; i++) {
-//   result.push(parseJSON(unparseableStrings[i]));
+//   expected.push(JSON.parse(unparseableStrings[i]));
 // }
-    document.getElementById('result').innerHTML = result;
+
