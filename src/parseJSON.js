@@ -142,36 +142,42 @@ var parseJSON = function (inString) {
   var cursor = new Scan(0, 0, 0, 0, 0, []);
 /////////////////////////////////////////////////////////////////////////////
   var splitUnparsedElements = function () {
+//    cleanUnparsedElements = cleanUnparsedElements.replace(/\\\"/g,'"').replace(/\\/g,'\\');
+      var locateCommas = function () {
+      	//locate all of the commmas, but ignore any commas inside nested arrays, objects,
+      	//double quotes, or single quotes. 
+      	cursor.reset();
+      	for (i=0; i < cleanUnparsedElements.length; i++) {
+      	  if (cleanUnparsedElements.charAt(i) === ',' && (cursor.isOutsideNest() && cursor.isOutsideDoubleQuote())) {
+      	    cursor.commaIndexes.push(i);
+      	  }
+      	  if (cleanUnparsedElements.charAt(i) === '"' && cursor.isOutsideDoubleQuote() && !(cleanUnparsedElements.charAt(i-1) === '\\')) {
+      	    cursor.doubleQuoteBalance = 1;
+      	  } else if (cleanUnparsedElements.charAt(i) === '"' && !cursor.isOutsideDoubleQuote() && !(cleanUnparsedElements.charAt(i-1) === '\\')) {
+      	    cursor.doubleQuoteBalance = 0;
+      	  }
+      	  if (cleanUnparsedElements.charAt(i) === '{') {
+      	    cursor.curlyBraceBalance++;
+      	  }
+      	  if (cleanUnparsedElements.charAt(i) === '}') {
+      	    cursor.curlyBraceBalance--;
+      	  }
+      	  if (cleanUnparsedElements.charAt(i) === '[') {
+      	    cursor.squareBracketBalance++;
+      	  }
+      	  if (cleanUnparsedElements.charAt(i) === ']') {
+      	    cursor.squareBracketBalance--;
+      	  }
+      	}  
+      };
     //remove the outer brackets.
     cleanUnparsedElements = cleanUnparsedElements.slice(1,-1);
-    cleanUnparsedElements = cleanUnparsedElements.replace(/\\"/g,'"');
-//    cleanUnparsedElements = cleanUnparsedElements.replace(/\\\"/g,'"').replace(/\\/g,'\\');
-    //locate all of the commmas, but ignore any commas inside nested arrays, objects,
-    //double quotes, or single quotes. 
-    cursor.reset();
-    for (i=0; i < cleanUnparsedElements.length; i++) {
-      if (cleanUnparsedElements.charAt(i) === ',' && (cursor.isOutsideNest() && cursor.isOutsideDoubleQuote())) {
-        cursor.commaIndexes.push(i);
-      }
-      if (cleanUnparsedElements.charAt(i) === '"' && cursor.isOutsideDoubleQuote() && !(cleanUnparsedElements.charAt(i-1) === '\\')) {
-        cursor.doubleQuoteBalance = 1;
-      } else if (cleanUnparsedElements.charAt(i) === '"' && !cursor.isOutsideDoubleQuote() && !(cleanUnparsedElements.charAt(i-1) === '\\')) {
-        cursor.doubleQuoteBalance = 0;
-      }
-      if (cleanUnparsedElements.charAt(i) === '{') {
-        cursor.curlyBraceBalance++;
-      }
-      if (cleanUnparsedElements.charAt(i) === '}') {
-        cursor.curlyBraceBalance--;
-      }
-      if (cleanUnparsedElements.charAt(i) === '[') {
-        cursor.squareBracketBalance++;
-      }
-      if (cleanUnparsedElements.charAt(i) === ']') {
-        cursor.squareBracketBalance--;
-      }
+    locateCommas();
+    if (cursor.doubleQuoteBalance > 0 || cursor.squareBracketBalance > 0 || cursor.curlyBraceBalance > 0) {
+      throw new SyntaxError("Unexpected end of input")
     }
-
+    cleanUnparsedElements = cleanUnparsedElements.replace(/\\"/g,'"');
+    locateCommas();
     //slice off each string between the commas and copy into an array.
     unparsedArrayElements[0] = cleanUnparsedElements.slice(0, cursor.commaIndexes[0]);
     if (cursor.commaIndexes.length > 1) {
@@ -246,14 +252,14 @@ var parseJSON = function (inString) {
     cleanUnparsedElements = '[' + cleanUnparsedElements + ']';
     splitUnparsedElements();
     //throw a SyntaxError if there are any unpaired brackets or quotes.
-    try {
+    // try {
       if (cursor.doubleQuoteBalance > 0 || cursor.squareBracketBalance > 0 || cursor.curlyBraceBalance > 0) {
         throw new SyntaxError("Unexpected end of input")
       }
-    }
-    catch (e) {
-      console.log(e.message);
-    }
+    // }
+    // catch (e) {
+    //   console.log(e.message);
+    // }
 
     //parse the undefined, string, null, or boolean
     if (cleanUnparsedElements === 'true') {
